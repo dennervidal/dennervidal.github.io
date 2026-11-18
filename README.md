@@ -1,10 +1,10 @@
 # Denner Vidal — personal site
 
-Site pessoal com resumo profissional em inglês e artigos sobre arquitetura, ferramentas e práticas de engenharia de software.
+A personal site with a professional profile and articles on software architecture, tools, and engineering practices.
 
-## Desenvolvimento
+## Development
 
-Use Node.js 24 LTS (mínimo: 22.23.4). As versões das dependências estão fixadas no manifesto e no lockfile. O TypeScript fica na versão estável mais recente compatível com o verificador do Astro (6.x).
+Use Node.js 24 LTS (minimum supported version: 22.23.4). Dependency versions are pinned in the manifest and lockfile. The project uses TypeScript 6.x for compatibility with Astro's type checker.
 
 ```sh
 npm ci
@@ -14,46 +14,46 @@ npm run build
 npm run preview
 ```
 
-O Astro gera o HTML estático em `dist/`, e o Pagefind acrescenta os arquivos da busca. A busca funciona no preview e na hospedagem; o servidor de desenvolvimento não gera o índice.
+Astro generates static HTML in `dist/`, and Pagefind adds the search index. Search works in the production preview and on the deployed site; the development server does not generate the index.
 
-## Publicar um artigo
+## Publish an article
 
-Crie um arquivo Markdown ou MDX em `src/content/blog/`. O nome do arquivo determina a URL; evite renomeá-lo depois de publicar. Use slugs descritivos como `cache-no-build`; os números sem texto são reservados à paginação.
+Create a Markdown or MDX file in `src/content/blog/`. The filename determines the URL, so avoid renaming it after publication. Use descriptive slugs such as `build-caching`; numeric-only slugs are reserved for pagination.
 
-O arquivo de artigos fica em `/articles/`, relativo ao caminho-base do Pages (por exemplo, `/blog/articles/`). O idioma padrão dos artigos é inglês. Para publicar em português, inclua `lang: pt-BR` no frontmatter. A busca usa um único índice para encontrar artigos nos dois idiomas.
+The article archive lives at `/articles/`, relative to the Pages base path. Articles default to English. To publish in Portuguese, set `lang: pt-BR` in the frontmatter. Search uses one index for both languages.
 
 ```md
 ---
-title: Cache no build
-description: Quando vale a pena reutilizar os artefatos do build.
+title: Build caching
+description: When it makes sense to reuse build artifacts.
 publishedAt: 2026-11-17
-tags: [publicação, desempenho]
-category: Engenharia de Software
+tags: [publishing, performance]
+category: Software Engineering
 draft: true
 ---
 
-Comece o texto aqui. O layout já usa o título como H1;
-comece as seções internas com H2.
+Start writing here. The layout uses the article title as the H1,
+so start sections in the body with H2.
 ```
 
-A coleção valida os metadados. `updatedAt` e `cover` são opcionais; para a capa, use um caminho como `/images/cache.webp` e salve o arquivo em `public/images/`. Para imagens no corpo, prefira referências locais relativas ao arquivo Markdown ou imports no MDX, para que o Astro possa processá-las. MDX também permite importar componentes Astro e adicionar interatividade quando fizer sentido.
+Astro's content collection validates the frontmatter. `updatedAt` and `cover` are optional. For a cover, use a path such as `/images/cache.webp` and save the file in `public/images/`. For images in the body, prefer paths relative to the Markdown file or imports in MDX so Astro can process them. MDX can also import Astro components.
 
-Rascunhos aparecem em desenvolvimento e não entram nas páginas, taxonomias, RSS, sitemap ou busca de produção. **Não use rascunhos para conteúdo privado**: arquivos em um repositório público continuam visíveis. Ao publicar, remova `draft` ou defina `draft: false`.
+Drafts appear in development but are excluded from production pages, categories, tags, RSS, the sitemap, and search. **Do not put private content in drafts**: the source files are visible in this public repository. To publish, remove `draft` or set `draft: false`.
 
-## Deploy no GitHub Pages
+## Deploy to GitHub Pages
 
-1. Crie o repositório no GitHub e envie este diretório como raiz do repositório, na branch `main`.
-2. Em **Settings → Pages → Build and deployment**, selecione **GitHub Actions** como origem.
-3. Faça push em `main` ou execute manualmente **Publicar no GitHub Pages** na aba Actions. Novos pushes publicam automaticamente.
+The site is hosted at [dennervidal.github.io](https://dennervidal.github.io/). Every push to `main` runs `.github/workflows/deploy.yml`. To deploy manually, run **Publicar no GitHub Pages** from the Actions tab. If setting up a new repository, first select **GitHub Actions** under **Settings → Pages → Build and deployment**.
 
-O workflow usa a URL de origem e o caminho-base informados pelo Pages. Para testar um site de projeto antes do deploy, execute:
+The workflow uses the origin and base path reported by GitHub Pages. For a production preview of this site:
 
 ```sh
-export SITE_URL=https://seu-usuario.github.io BASE_PATH=/seu-repositorio
+export SITE_URL=https://dennervidal.github.io BASE_PATH=/
 npm run build
 npm run preview
 ```
 
-Para domínio personalizado, configure o domínio e os registros DNS no GitHub Pages. Rode o workflow novamente para atualizar URLs canônicas, feed e sitemap. Sites na raiz usam `BASE_PATH=/`. Nenhum segredo ou servidor Node.js é necessário em produção.
+Set the same base path for both build and preview. A project site hosted under a repository name uses a path such as `/my-repository` instead of `/`.
 
-Ao manter o site, confira o build e abra as páginas de início, artigo e busca no preview. Rode o Lighthouse no site publicado ou preview com perfil mobile; as metas são 95 ou mais em Performance, Accessibility e SEO.
+To use a custom domain, configure it in GitHub Pages, update the DNS records with your provider, and rerun the workflow to refresh canonical URLs, RSS, and the sitemap. No deployment secrets or production Node.js server are required.
+
+Before publishing changes, check the build and open the home page, an article, and search in the preview. For a mobile Lighthouse audit, aim for at least 95 in Performance, Accessibility, and SEO.
