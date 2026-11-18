@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { posts, sitePath } from '../blog';
+const recent = (await posts()).slice(0, 5);
+---
+<Base>
+  <section class="hero" aria-labelledby="intro">
+    <p class="eyebrow">Software Engineer / Tech Lead</p>
+    <h1 id="intro">Denner Vidal</h1>
+    <p>I’m a software engineer and tech lead at TecSinapse in Brazil. I help design and build web and mobile products, with a focus on architecture, performance, and making software easier for teams to develop and ship.</p>
+    <nav class="links mt-6" aria-label="Find me online">
+      <a href="https://www.linkedin.com/in/dennervidal/">LinkedIn ↗</a>
+      <a href="https://github.com/dennervidal">GitHub ↗</a>
+      <a href="https://dev.to/dennervidal">DEV Community ↗</a>
+      <a href="https://dennervidal.substack.com/">Substack ↗</a>
+    </nav>
+  </section>
+  <section class="section" aria-labelledby="projects">
+    <h2 id="projects">Current projects</h2>
+    <ul>
+      <li class="entry">
+        <span>Community platform</span>
+        <div>
+          <h3 class="links"><a href="https://culturatps.com.br/">Cultura TPS ↗</a></h3>
+          <p>A Brazilian community for car and motorcycle enthusiasts. Members can document their builds in a digital garage, find and share local meetups, and connect with people working on similar projects.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="section" aria-labelledby="experience">
+    <h2 id="experience">Experience</h2>
+    <ul>
+      <li class="entry"><span>2021–Present</span><div><h3>Software Engineer</h3><p>TecSinapse · I currently lead technical work on new products and improve development workflows and automation. My work spans React, React Native, and TypeScript, as well as Kotlin, Java, GraphQL, PostgreSQL, and RabbitMQ.</p></div></li>
+      <li class="entry"><span>2024</span><div><h3>React Workshop Instructor</h3><p>IFMS · Led a hands-on workshop on building and deploying a climate indicators dashboard with React.</p></div></li>
+      <li class="entry"><span>2016–2017</span><div><h3>First steps in software development</h3><p>I started as a developer intern at Indext, working on digital signage with Django. At Embrapa Gado de Corte, I helped develop a cattle monitoring platform using React.</p></div></li>
+    </ul>
+  </section>
+  <section class="section" aria-labelledby="education">
+    <h2 id="education">Education</h2>
+    <div class="entry"><span>2021</span><div><h3>Bachelor’s in Computer Information Systems</h3><p>Federal University of Mato Grosso do Sul (UFMS)</p></div></div>
+  </section>
+  <section class="section" aria-labelledby="academic-work">
+    <h2 id="academic-work">Selected academic work</h2>
+    <ul>
+      <li class="entry">
+        <span>2017</span>
+        <div>
+          <h3>EverCare</h3>
+          <p>I helped build the web interface for an elderly care platform using React and Google Cloud Functions. Our team took part in the Embedded Systems Contest at SBESC 2017.</p>
+        </div>
+      </li>
+      <li class="entry">
+        <span>SBRC 2017</span>
+        <div>
+          <h3>Research publication</h3>
+          <p>I co-authored a paper on estimating the energy consumption of individual web application transactions.</p>
+          <p class="links"><a lang="pt-BR" href="https://sol.sbc.org.br/index.php/sbrc/article/view/2676">Um Modelo Analítico para Estimar o Consumo de Energia de Aplicações Web no Nível de Transações ↗</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="section" aria-labelledby="writing">
+    <h2 id="writing">Recent articles</h2>
+    <p class="mb-6">I write about software architecture, the tools I use, and what I learn while building and maintaining products.</p>
+    <PostList entries={recent} />
+    <p class="links mt-6"><a href={sitePath('articles/')}>Browse all articles →</a></p>
+  </section>
+</Base>

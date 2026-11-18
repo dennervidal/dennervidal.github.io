@@ -1,0 +1,29 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { dateLabel, posts, sitePath, taxonomySlug } from '../../blog';
+export const getStaticPaths = (async () => (await posts()).map(post => {
+  if (/^\d+$/.test(post.id)) throw new Error('Numeric slugs are reserved for pagination: ' + post.id);
+  return { params: { slug: post.id }, props: { post } };
+})) satisfies GetStaticPaths;
+const { post } = Astro.props;
+const { data } = post;
+const { Content } = await render(post);
+---
+<Base title={data.title} description={data.description} image={data.cover} article noindex={data.draft} lang={data.lang}>
+  <article class="section" data-pagefind-body>
+    <header class="mb-10">
+      <p class="eyebrow"><a href={sitePath('categories/' + taxonomySlug(data.category) + '/')}>{data.category}</a></p>
+      <h1 class="text-[clamp(2.25rem,7vw,5rem)]" data-pagefind-meta="title">{data.title}</h1>
+      <p class="mt-5 text-xl leading-relaxed" style="color: var(--muted)">{data.description}</p>
+      <p class="mt-5 border-b border-[var(--rule)] pb-4 font-mono text-sm" style="color: var(--muted)"><time datetime={data.publishedAt.toISOString()}>{dateLabel(data.publishedAt, data.lang)}</time>
+      {data.updatedAt && <> · {data.lang === 'pt-BR' ? 'Atualizado em' : 'Updated'} <time datetime={data.updatedAt.toISOString()}>{dateLabel(data.updatedAt, data.lang)}</time></>}
+      {data.draft && <> · {data.lang === 'pt-BR' ? 'Rascunho' : 'Draft'}</>}
+      </p>
+    </header>
+    {data.cover && <img class="mb-8" src={sitePath(data.cover)} alt="" />}
+    <div class="prose"><Content /></div>
+    <ul class="links mt-8" aria-label="Tags">{data.tags.map(tag => <li><a href={sitePath('tags/' + taxonomySlug(tag) + '/')}>#{tag}</a></li>)}</ul>
+  </article>
+</Base>

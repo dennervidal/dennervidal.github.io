@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+import { sitePath, siteTitle, siteDescription } from '../blog';
+interface Props { title?: string; description?: string; image?: string; article?: boolean; noindex?: boolean; lang?: 'en' | 'pt-BR' }
+const { title, description = siteDescription, image, article = false, noindex = false, lang = 'en' } = Astro.props;
+const heading = title ? title + ' | ' + siteTitle : siteTitle;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{heading}</title>
+  <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex" />}
+  {!noindex && <link rel="canonical" href={canonical} />}
+  <meta property="og:title" content={heading} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content={article ? 'article' : 'website'} />
+  <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'pt_BR'} />
+  <meta property="og:url" content={canonical} />
+  {image && <meta property="og:image" content={new URL(sitePath(image), Astro.site)} />}
+  <link rel="icon" href={sitePath('favicon.svg')} />
+  <link rel="alternate" type="application/rss+xml" title={siteTitle} href={sitePath('rss.xml')} />
+  <script is:inline>
+    try { const theme = localStorage.getItem('theme'); if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme; } catch {}
+  </script>
+</head>
+<body>
+  <a class="skip" lang="en" href="#content">Skip to content</a>
+  <header class="wrap masthead" lang="en"><a class="brand" href={sitePath()}><span aria-hidden="true">[&thinsp;DV&thinsp;]</span> {siteTitle}</a>
+    <nav aria-label="Main"><a href={sitePath()}>Home</a><a href={sitePath('articles/')}>Articles</a><a href={sitePath('search/')}>Search</a><button id="theme" type="button" hidden>Dark mode</button></nav>
+  </header>
+  <main id="content" class="wrap"><slot /></main>
+  <footer class="wrap footer" lang="en"><span>{siteTitle}</span><a href={sitePath('rss.xml')}>RSS feed ↗</a></footer>
+  <script>
+    const button = document.querySelector<HTMLButtonElement>('#theme');
+    if (button) {
+      const system = matchMedia('(prefers-color-scheme: dark)');
+      const root = document.documentElement;
+      const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : system.matches;
+      const sync = () => button.setAttribute('aria-pressed', String(isDark()));
+      button.hidden = false;
+      sync();
+      system.addEventListener('change', sync);
+      button.addEventListener('click', () => {
+        const next = isDark() ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch {}
+        sync();
+      });
+    }
+  </script>
+</body>
+</html>

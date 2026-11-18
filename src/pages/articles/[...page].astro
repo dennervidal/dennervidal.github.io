@@ -1,0 +1,19 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { posts, sitePath } from '../../blog';
+export const getStaticPaths = (async ({ paginate }) => paginate(await posts(), { pageSize: 8 })) satisfies GetStaticPaths;
+const { page } = Astro.props;
+---
+<Base title={page.currentPage === 1 ? 'Articles' : 'Articles — Page ' + page.currentPage}>
+  <section class="section"><p class="eyebrow">Archive</p><h1>Articles</h1>
+  <nav class="links mb-6" aria-label="Explore articles"><a href={sitePath('categories/')}>Categories</a><a href={sitePath('tags/')}>Tags</a></nav>
+  <PostList entries={page.data} />
+  {page.lastPage > 1 && <nav class="links mt-6" aria-label="Pagination">
+    {page.url.prev && <a href={page.url.prev}>← Previous</a>}
+    <span>Page {page.currentPage} of {page.lastPage}</span>
+    {page.url.next && <a href={page.url.next}>Next →</a>}
+  </nav>}
+  </section>
+</Base>

@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { sitePath } from '../blog';
+const bundle = sitePath('pagefind/');
+---
+<Base title="Search"><section class="section">
+  <p class="eyebrow">Archive</p><h1>Search articles</h1>
+  {import.meta.env.DEV ? <p>Run <code>npm run build</code> and <code>npm run preview</code> to search the generated index.</p> : <>
+    <link rel="stylesheet" href={bundle + 'pagefind-ui.css'} />
+    <div id="search" class="max-w-2xl"></div>
+    <noscript>Enable JavaScript to search articles.</noscript>
+    <script is:inline define:vars={{ bundle }}>
+      const script = document.createElement('script');
+      script.src = bundle + 'pagefind-ui.js';
+      script.onload = () => new window.PagefindUI({ element: '#search', bundlePath: bundle, showImages: false, showSubResults: true });
+      script.onerror = () => { document.querySelector('#search').textContent = 'Could not load the search index.'; };
+      document.head.append(script);
+    </script>
+  </>}
+</section></Base>
+<style>
+  #search {
+    --pagefind-ui-primary: var(--accent);
+    --pagefind-ui-text: var(--ink);
+    --pagefind-ui-background: var(--paper);
+    --pagefind-ui-border: var(--rule);
+    --pagefind-ui-tag: var(--code);
+    --pagefind-ui-font: system-ui, sans-serif;
+  }
+</style>

@@ -1,0 +1,5 @@
+---
+import Base from '../layouts/Base.astro';
+import { sitePath } from '../blog';
+---
+<Base title="Page not found" noindex><section class="section"><p class="eyebrow">Error 404</p><h1>Page not found.</h1><p class="links"><a href={sitePath()}>Back to home</a><a href={sitePath('search/')}>Search articles</a></p></section></Base>

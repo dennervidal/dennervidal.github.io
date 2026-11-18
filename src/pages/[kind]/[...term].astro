@@ -1,0 +1,25 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { groups, posts, sitePath } from '../../blog';
+export const getStaticPaths = (async () => {
+  const entries = await posts();
+  return (['tags', 'categories'] as const).flatMap(kind => {
+    const index = groups(entries, kind);
+    return [
+      { params: { kind, term: undefined }, props: { index, group: undefined } },
+      ...index.map(([term, group]) => ({ params: { kind, term }, props: { index: undefined, group } })),
+    ];
+  });
+}) satisfies GetStaticPaths;
+const { kind } = Astro.params;
+const { index, group } = Astro.props;
+const title = kind === 'tags' ? 'Tags' : 'Categories';
+---
+<Base title={group?.label ?? title}><section class="section">
+  {group && <p class="eyebrow"><a href={sitePath(kind + '/')}>{title}</a></p>}
+  <h1>{group?.label ?? title}</h1>
+  {group ? <div><h2 class="mb-4">Articles</h2><PostList entries={group.entries} /></div> :
+    <ul class="links">{index?.map(([slug, item]) => <li><a href={sitePath(kind + '/' + slug + '/')}>{item.label}</a> ({item.entries.length})</li>)}</ul>}
+</section></Base>

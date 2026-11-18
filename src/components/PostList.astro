@@ -1,0 +1,8 @@
+---
+import { dateLabel, postPath, type Post } from '../blog';
+const { entries } = Astro.props as { entries: Post[] };
+---
+{entries.length ? <ul aria-label="Articles">{entries.map(post => <li class="entry">
+  <time datetime={post.data.publishedAt.toISOString()}>{dateLabel(post.data.publishedAt)}</time>
+  <div lang={post.data.lang}><h3><a href={postPath(post)}>{post.data.title}</a></h3><p>{post.data.description}</p></div>
+</li>)}</ul> : <p>No articles published yet.</p>}
